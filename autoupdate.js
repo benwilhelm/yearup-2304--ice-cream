@@ -1,8 +1,9 @@
-// Notice that because we're loading the script at the END of the
-// HTML file, we don't need to use the onload property. We can
-// get references to our elements right here in the outermost
-// scope of the JS file, which means we can reuse these variables
-// in the rest of the file. Neat!
+/**
+ * This file is basically a copy of scripts.js, but with some minor
+ * tweaks to make the form update immediately on any change. The differences
+ * between this file and that file are noted in comments below
+ */
+
 const numScoopsEl = document.getElementById('numberOfScoops');
 const cupEl = document.getElementById('cupOrCone_cup');
 const coneEl = document.getElementById('cupOrCone_cone');
@@ -20,10 +21,16 @@ const toppingsCostEl = document.getElementById('toppingsCost');
 const taxEl = document.getElementById('tax');
 const totalDueEl = document.getElementById('totalDue');
 
-// Using an anonymous function instead of a named function.
-// Not sure what I'm talking about? Look back at page 3-3 of
-// the workbook
-btnEl.onclick = function () {
+// I'm removing the button with javascript, rather than
+// create a whole separate HTML file without a button
+btnEl.remove();
+
+// Since we don't have a button anymore, we're going to take
+// the anonymous function that had been assigned to btn.onclick
+// and instead give it a name that describes what it does. We'll
+// then assign this function to the onchange handler of every input
+// on the page, which will trigger it any time an input value changes
+function updatePrices() {
   const numScoops = +numScoopsEl.value;
   const basePrice = getBasePrice(numScoops);
   basePriceEl.innerHTML = basePrice.toFixed(2);
@@ -37,7 +44,21 @@ btnEl.onclick = function () {
 
   const totalDue = subtotal + tax;
   totalDueEl.innerHTML = totalDue.toFixed(2);
-};
+}
+
+// We *could* manually attach the updatePrices handler to each
+// element's onchange event, similar to what you see done below
+// on lines 63 and 64 with cupEl.onchange and coneEl.onchange.
+// That would be very tedious, and difficult to keep up to date
+// if you added more inputs.
+// Instead, we're going to use the querySelectorAll method to get a
+// collection of all of the inputs on the page, then use the forEach
+// method to attach an event listener to each one in a loop.
+// This is a preview of what we'll get into next week, but do some research
+// on your own and see if you can figure out how it works.
+document.querySelectorAll('input').forEach(function (input) {
+  input.addEventListener('change', updatePrices);
+});
 
 cupEl.onchange = onCupConeChange;
 coneEl.onchange = onCupConeChange;
