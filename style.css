@@ -1,3 +1,11 @@
 .container {
   max-width: 500px;
 }
+
+table tr td:nth-child(2) {
+  text-align: right;
+}
+
+table tr:last-child {
+  font-weight: bold;
+}
